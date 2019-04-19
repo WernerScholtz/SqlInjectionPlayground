@@ -1,8 +1,38 @@
-﻿@{
+﻿@model SqlInjectionDemo.Web.Public.Models.UserSearchInputModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+
+        <form asp-controller="Home" asp-action="Index" method="post">
+            @Html.DisplayNameFor(x => x.SearchName)
+            <input asp-for="SearchName" />
+            @Html.DisplayNameFor(x => x.IsSafe)
+            <input asp-for="IsSafe" />
+            <button type="submit">Submit</button>
+        </form>
+
+        @*<form asp-controller="Home" asp-action="Index" method="post">
+            @Html.DisplayNameFor(x => x.Name)
+            <input asp-for="Name" />
+            @Html.DisplayNameFor(x => x.Email)
+            <input asp-for="Email" />
+            @Html.DisplayNameFor(x => x.IsSafe)
+            <input asp-for="IsSafe"/>
+            <button type="submit">Submit</button>
+        </form>*@
+        
+        @if (Model.Users.Any())
+        {
+            foreach (var user in Model.Users)
+             {
+                 <div>@user.UserId</div>
+                 <div>@user.Name</div>
+                 <div>@user.Email</div>
+             }
+        }
+
+    </div>

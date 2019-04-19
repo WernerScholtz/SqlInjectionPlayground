@@ -5,8 +5,7 @@ namespace SqlInjectionDemo.Application
 {
     public interface IUserService
     {
-        Task<List<User>> Get();
-        Task<List<User>> GetById(int id);
-
+        Task<List<User>> GetUnsafe(string searchName);
+        Task<List<User>> GetSafe(string searchName);
     }
 }
