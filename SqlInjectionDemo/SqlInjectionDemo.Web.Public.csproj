@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SqlInjectionDemo.Application\SqlInjectionDemo.Application.csproj" />
+    <ProjectReference Include="..\SqlInjectionDemo.Common\SqlInjectionDemo.Common.csproj" />
   </ItemGroup>
 
 </Project>

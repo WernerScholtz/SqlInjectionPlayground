@@ -4,35 +4,89 @@
     ViewData["Title"] = "Home Page";
 }
 
-    <div class="text-center">
-        <h1 class="display-4">Welcome</h1>
+<div class="container-fluid">
+    <h1 class="display-4 text-center mb-4">Welcome to SQL Injection Playground</h1>
+    <div class="row">
+        <div class="col-md-5 col-12">
+            <h4>What's this about?</h4>
+            <p>
+                This is a simple sandbox environment to illustrate how easy SQL Injection happens. Copy the examples below into the search box to try them out.
+                You can also switch between safe and unsafe modes by toggling the "IsSafe" checkbox. This app is built on a SQL database with the search box
+                using SQL's "LIKE" function. Toggling the "IsSafe" checkbox will either make a safe query where the search string is passed to SQL as a parameter,
+                or it will make an unsafe request where the query is simply built up with the search string and executed directly without telling SQL Server
+                that a parameter is present.
+            </p>
 
-        <form asp-controller="Home" asp-action="Index" method="post">
-            @Html.DisplayNameFor(x => x.SearchName)
-            <input asp-for="SearchName" />
-            @Html.DisplayNameFor(x => x.IsSafe)
-            <input asp-for="IsSafe" />
-            <button type="submit">Submit</button>
-        </form>
+            <h4>Some examples:</h4>
 
-        @*<form asp-controller="Home" asp-action="Index" method="post">
-            @Html.DisplayNameFor(x => x.Name)
-            <input asp-for="Name" />
-            @Html.DisplayNameFor(x => x.Email)
-            <input asp-for="Email" />
-            @Html.DisplayNameFor(x => x.IsSafe)
-            <input asp-for="IsSafe"/>
-            <button type="submit">Submit</button>
-        </form>*@
-        
-        @if (Model.Users.Any())
-        {
-            foreach (var user in Model.Users)
-             {
-                 <div>@user.UserId</div>
-                 <div>@user.Name</div>
-                 <div>@user.Email</div>
-             }
-        }
+            <p class="my-0">1. Return everything rather than just the substring being searched for:</p>
+            <p class="text-info">body%') or 1=1;--</p>
 
+            <p class="my-0">2. Insert a new row into the Users table after searching for the specified substring:</p>
+            <p class="text-info">el%'); INSERT [Users] VALUES('Injected User','Injected email address');--</p>
+
+            <p class="my-0">3. Update everyone's email address:</p>
+            <p class="text-info">el%'); UPDATE [Users] Set Email = 'whatever@email.com';--</p>
+        </div>
+
+        <div class="col-md-7 col-12">
+            <div class="card">
+
+                <h4 class="card-header">Let's play :D</h4>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 col-12">
+                            <form asp-controller="Home" asp-action="Index" method="post">
+
+                                <div class="form-group">
+                                    @Html.DisplayNameFor(x => x.SearchName)
+                                    <input asp-for="SearchName" />
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.DisplayNameFor(x => x.IsSafe)
+                                    <input asp-for="IsSafe" />
+                                </div>
+
+                                <button type="submit">Submit</button>
+                            </form>
+
+                            <div class="text-center text-warning">
+                                @Model.ErrorMessage
+                            </div>
+                        </div>
+
+                        <div class="col-md-8 col-12">
+                            <div class="row">
+                                @if (Model.Users.Any())
+                                {
+                                    <div class="col-2">UserId</div>
+                                    <div class="col-5">Name</div>
+                                    <div class="col-5">Email</div>
+                                    <hr />
+                                    foreach (var user in Model.Users)
+                                    {
+                                        <div class="col-2">@user.UserId</div>
+                                        <div class="col-5">@user.Name</div>
+                                        <div class="col-5">@user.Email</div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="col-12">
+                                        There seems to be no users in the Users table.
+                                    </div>
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
     </div>
+
+</div>

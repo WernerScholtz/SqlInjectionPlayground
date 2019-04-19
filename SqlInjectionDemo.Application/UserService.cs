@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using SqlInjectionDemo.Common;
 
 namespace SqlInjectionDemo.Application
 {
@@ -19,6 +20,17 @@ namespace SqlInjectionDemo.Application
 
         public async Task<List<User>> GetUnsafe(string searchName)
         {
+            if (!string.IsNullOrWhiteSpace(searchName))
+            {
+                foreach (var unsafeKeyword in UnsafeKeywords)
+                {
+                    if (searchName.ToLower().Contains(unsafeKeyword))
+                    {
+                        throw new FunSpoilerException("Although dropping or deleting something would probably have worked, let's not spoil the fun too soon. Rather try something else for now please. :)");
+                    }
+                }
+            }
+
             using (var conn = Connection)
             {
                 var query = $"SELECT * FROM [dbo].[Users] WHERE Name LIKE ('%{searchName}%')";
@@ -51,5 +63,12 @@ namespace SqlInjectionDemo.Application
                 return connection;
             }
         }
+
+        private List<string> UnsafeKeywords =>
+            new List<string>
+            {
+                "drop",
+                "delete"
+            };
     }
 }

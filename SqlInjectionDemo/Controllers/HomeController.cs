@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SqlInjectionDemo.Application;
+using SqlInjectionDemo.Common;
 using SqlInjectionDemo.Web.Public.Models;
 
 namespace SqlInjectionDemo.Web.Public.Controllers
@@ -29,19 +31,29 @@ namespace SqlInjectionDemo.Web.Public.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(UserSearchInputModel model)
         {
-            List<User> users;
-            if (model.IsSafe)
+            try
             {
-                users = await userService.GetSafe(model.SearchName);
+                List<User> users;
+                if (model.IsSafe)
+                {
+                    users = await userService.GetSafe(model.SearchName);
+                }
+                else
+                {
+                    users = await userService.GetUnsafe(model.SearchName);
+                }
+
+                model.SetUsers(users);
+
+                return View(model);
             }
-            else
+            catch (FunSpoilerException e)
             {
-                users = await userService.GetUnsafe(model.SearchName);
+                var users = await userService.GetSafe("");
+                model.SetUsers(users);
+                model.SetErrorMessage(e.Message);
+                return View(model);
             }
-
-            model.SetUsers(users);
-
-            return View(model);
         }
 
         public IActionResult Privacy()

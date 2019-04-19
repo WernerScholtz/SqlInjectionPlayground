@@ -12,6 +12,7 @@ namespace SqlInjectionDemo.Web.Public.Models
         public bool IsSafe { get; set; }
 
         public List<User> Users { get; set; }
+        public string ErrorMessage { get; set; }
 
         public UserSearchInputModel()
         {
@@ -25,6 +26,11 @@ namespace SqlInjectionDemo.Web.Public.Models
         public void SetUsers(List<User> users)
         {
             Users = users;
+        }
+
+        public void SetErrorMessage(string errorMessage)
+        {
+            ErrorMessage = errorMessage;
         }
     }
 }
